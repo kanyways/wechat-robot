@@ -1,0 +1,16 @@
+**.class
+
+# Package Files #
+**.jar
+**.war
+**.ear
+**.iml
+**.ipr
+**.iws
+**.project
+**/.settings/**
+**/.idea/**
+
+*.log
+.idea
+*.swp
