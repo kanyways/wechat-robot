@@ -11,7 +11,7 @@
 > - MySql：用过数据库的应该知道
 > - Gin：Web框架，好评不错。最近自己“抄袭”的另外一个项目用这个框架实现
 > - Gorm：数据库
-> - [WeChat SDK](github.com/silenceper/wechat)
+> - [WeChat SDK](https://github.com/silenceper/wechat)
 
 #### 安装教程
 
