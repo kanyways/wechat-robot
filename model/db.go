@@ -5,7 +5,7 @@ import (
 	"os"
 	"github.com/jinzhu/gorm"
 	"github.com/kanyways/wechat-robot/config"
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"time"
 )
 

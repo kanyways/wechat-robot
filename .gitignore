@@ -14,3 +14,4 @@
 *.log
 .idea
 *.swp
+/doc/config.yml

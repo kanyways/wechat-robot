@@ -2,9 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"reflect"
 	"os"
 	"path/filepath"
+	"reflect"
 )
 
 func setField(obj interface{}, name string, value interface{}) error {
@@ -50,6 +50,7 @@ func getExePath() string {
 		return ""
 	}
 	return execpath
+	//return "D:/Work/Go/src/gitee.com/kany/wechat-robot/"
 }
 
 func GetFilePath(fileName string) string {

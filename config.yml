@@ -1,0 +1,57 @@
+# 服务器配置
+server:
+  # 后台go加的X-Powered-By
+  apiPoweredBy: WeChat Robot API
+  # 网站名称
+  siteName: WeChat Robot
+  # 模式(开发，测试，产品)
+  env: development
+  # 如果要修改的话，请使用绝对路径，不要使用相对路径, 并在Nginx配置中，将修改后的目录配置为静态目录
+  # api服务请求前缀
+  apiPrefix: /api
+  # go监听的端口
+  port: 8023
+  # 日志文件夹
+  logDir:
+  # 图灵的 ApiKey
+  apiKey:
+  # 图灵的 ApiSecret
+  apiSecret:
+  # 腾讯的 TxApiKey
+  txApiKey:
+  # 腾讯的 TxApiSecret
+  txApiSecret:
+# 数据库配置
+database:
+  # 数据库类型
+  dialect: mysql
+  # 数据库名称
+  database: wechat
+  # 数据库账户
+  user: root
+  # 数据库密码
+  password: 
+  # 数据库ip
+  host: 127.0.0.1
+  # 数据库端口
+  port: 3306
+  # 要支持emoji的话，填 utf8mb4
+  charset: utf8mb4
+  # 空闲时最大的连接数
+  maxIdleConns: 5
+  # 最大的连接数
+  maxOpenConns: 10
+# Redis 配置
+redis:
+  # redis所在机器的ip
+  host: 127.0.0.1
+  # redis的端口
+  port: 6379
+  # redis的密码，若无密码，可不填
+  password:
+  # 选择存放数据库
+  database: 0
+  # 最大的空闲连接数
+  maxIdle: 3
+  # 最大的激活连接数
+  maxActive: 5

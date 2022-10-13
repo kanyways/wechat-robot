@@ -1,96 +1,90 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"regexp"
-	"unicode/utf8"
+	"github.com/kanyways/configs"
 	"github.com/kanyways/wechat-robot/utils"
+	"os"
+	"unicode/utf8"
 )
 
-var jsonData map[string]interface{}
-
-func initJSON() {
-
-	bytes, err := ioutil.ReadFile(utils.GetFilePath("config.json"))
-	if err != nil {
-		fmt.Println("ReadFile: ", err.Error())
-		os.Exit(-1)
-	}
-
-	configStr := string(bytes[:])
-	reg := regexp.MustCompile(`/\*.*\*/`)
-
-	configStr = reg.ReplaceAllString(configStr, "")
-	bytes = []byte(configStr)
-
-	if err := json.Unmarshal(bytes, &jsonData); err != nil {
-		fmt.Println("invalid config: ", err.Error())
-		os.Exit(-1)
-	}
+// 系统配置
+type serverConfig struct {
+	ApiPoweredBy string  `yaml:"apiPoweredBy"`
+	SiteName     string  `yaml:"siteName"`
+	Env          string  `yaml:"env"`
+	ApiPrefix    string  `yaml:"apiPrefix"`
+	Port         int     `yaml:"port"`
+	LogDir       string  `yaml:"logDir"`
+	LogFile      string  `yaml:"logFile"`
+	ApiKey       string  `yaml:"apiKey"`
+	ApiSecret    string  `yaml:"apiSecret"`
+	TxApiKey     float64 `yaml:"txApiKey"`
+	TxApiSecret  string  `yaml:"txApiSecret"`
 }
 
+// 数据库配置
 type dBConfig struct {
-	Dialect      string
-	Database     string
-	User         string
-	Password     string
-	Host         string
-	Port         int
-	Charset      string
+	Dialect      string `yaml:"dialect"`
+	Database     string `yaml:"database"`
+	User         string `yaml:"user"`
+	Password     string `yaml:"password"`
+	Host         string `yaml:"host"`
+	Port         int    `yaml:"port"`
+	Charset      string `yaml:"charset"`
 	URL          string
-	MaxIdleConns int
-	MaxOpenConns int
+	MaxIdleConns int `yaml:"maxIdleConns"`
+	MaxOpenConns int `yaml:"maxOpenConns"`
 }
+
+// redis的配置
+type redisConfig struct {
+	Host      string `yaml:"host"`
+	Port      int    `yaml:"port"`
+	Password  string `yaml:"password"`
+	Database  int    `yaml:"database"`
+	MaxIdle   int    `yaml:"maxIdle"`
+	MaxActive int    `yaml:"maxActive"`
+	URL       string
+}
+
+// 整体配置文件
+type Config struct {
+	Server   serverConfig `yaml:"server"`
+	Database dBConfig     `yaml:"database"`
+	Redis    redisConfig  `yaml:"redis"`
+}
+
+// 系统整体配置
+var conf Config
 
 // DBConfig 数据库相关配置
 var DBConfig dBConfig
 
-func initDB() {
-	utils.SetStructByJSON(&DBConfig, jsonData["database"].(map[string]interface{}))
-	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
-		DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Port, DBConfig.Database, DBConfig.Charset)
-	DBConfig.URL = url
-}
-
-type redisConfig struct {
-	Host      string
-	Port      int
-	Password  string
-	Database  int
-	URL       string
-	MaxIdle   int
-	MaxActive int
-}
-
 // RedisConfig redis相关配置
 var RedisConfig redisConfig
-
-func initRedis() {
-	utils.SetStructByJSON(&RedisConfig, jsonData["redis"].(map[string]interface{}))
-	url := fmt.Sprintf("%s:%d", RedisConfig.Host, RedisConfig.Port)
-	RedisConfig.URL = url
-}
-
-type serverConfig struct {
-	APIPoweredBy string
-	SiteName     string
-	Env          string
-	LogDir       string
-	LogFile      string
-	APIPrefix    string
-	Port         int
-	ApiKey       string
-	ApiSecret    string
-}
 
 // ServerConfig 服务器相关配置
 var ServerConfig serverConfig
 
+func initConfig() {
+	configs.Parse(&conf, configs.GetConfigAbsolutePath("config.yml"))
+}
+
+func initDB() {
+	DBConfig = conf.Database
+	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Port, DBConfig.Database, DBConfig.Charset)
+	DBConfig.URL = url
+}
+
+func initRedis() {
+	RedisConfig = conf.Redis
+	url := fmt.Sprintf("%s:%d", RedisConfig.Host, RedisConfig.Port)
+	RedisConfig.URL = url
+}
+
 func initServer() {
-	utils.SetStructByJSON(&ServerConfig, jsonData["go"].(map[string]interface{}))
+	ServerConfig = conf.Server
 	sep := string(os.PathSeparator)
 
 	ymdStr := utils.GetTodayYMD("-")
@@ -107,7 +101,7 @@ func initServer() {
 }
 
 func init() {
-	initJSON()
+	initConfig()
 	initDB()
 	initRedis()
 	initServer()

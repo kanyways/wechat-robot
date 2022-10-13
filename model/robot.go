@@ -49,7 +49,7 @@ func Recevie(msg *message.MixMessage) *message.Reply {
 		//将语音使用文本处理
 		if len(msg.Recognition) > 0 {
 			msg.Content = msg.Recognition
-			content := sendMessage(msg.FromUserName, msg.Content)
+			content := sendMessage(string(msg.FromUserName), msg.Content)
 			text = message.NewText(content)
 		} else {
 			text = message.NewText("是风太大还是我没有听清，要不然再说一下？")
@@ -63,7 +63,7 @@ func Recevie(msg *message.MixMessage) *message.Reply {
 		if strings.Contains(msg.Content, "测试的") {
 			text = message.NewText("你想要干嘛？")
 		} else {
-			content := sendMessage(msg.FromUserName, msg.Content)
+			content := sendMessage(string(msg.FromUserName), msg.Content)
 			text = message.NewText(content)
 		}
 		return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}

@@ -1,12 +1,12 @@
 package model
 
 import (
-	"net/url"
-	"github.com/kanyways/wechat-robot/utils"
-	"log"
 	"encoding/json"
-	"strings"
+	"github.com/kanyways/wechat-robot/utils"
 	"github.com/silenceper/wechat/message"
+	"log"
+	"net/url"
+	"strings"
 )
 
 // 青云客的数据结构
@@ -16,7 +16,7 @@ type QyRobot struct {
 }
 
 func qykSendMessage(content string) string {
-	var info = url.QueryEscape(content);
+	var info = url.QueryEscape(content)
 	requestUrl := "http://api.qingyunke.com/api.php?key=free&appid=0&msg=" + info
 
 	r, err := utils.Get(requestUrl, nil)
